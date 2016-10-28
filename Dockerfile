@@ -33,7 +33,7 @@ ONBUILD COPY . /data
 
 # set internal sbt repo and crontab
 ONBUILD RUN if [ -e /data/script/sbt-repositories ] ; then cp /data/script/sbt-repositories ~/.sbt/repositories ; fi
-ONBUILD RUN if [ -e /data/script/crontab ] ; then cp /data/script/crontab && touch /var/log/cron.log ; fi
+ONBUILD RUN if [ -e /data/script/crontab ] ; then cp /data/script/crontab /etc/crontab && touch /var/log/cron.log ; fi
 
 # build and test
 ONBUILD RUN systemctl restart mongodb && systemctl restart redis \ && cd /data \
