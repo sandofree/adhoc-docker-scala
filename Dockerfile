@@ -1,23 +1,12 @@
 # Pull base image.
-FROM ubuntu
+FROM centos:7
 
-# Install Java.
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update -y && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/cache/oracle-jdk8-installer
+RUN wget --no-cookies --no-check-certificate --header \
+	"Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
+	"http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.rpm"
+RUN yum localinstall jdk-8u60-linux-x64.rpm
 
-# Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME /usr/java/jdk1.8.0_60/jre
 
-# install sbt and tools
-RUN echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-RUN apt-get install -y --force-yes sbt redis-server mongodb cron unzip
-
-# set timezone to CN
-RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
-
-# Define default command.
-CMD ["bash"]
+RUN curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+RUN yum install -y sbt
