@@ -27,7 +27,7 @@ enabled=1 \n\
 gpgkey=https://www.mongodb.org/static/pgp/server-3.2.asc' > /etc/yum.repos.d/mongodb-org.repo
 RUN wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/epel/7/x86_64/e/ && \
 	rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-*.rpm
-RUN yum install -y cron redis mongodb-org cron unzip
+RUN yum install -y cron redis mongodb-org unzip
 
 ONBUILD COPY . /data
 
