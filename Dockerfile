@@ -9,5 +9,9 @@ RUN yum localinstall -y jdk-8u60-linux-x64.rpm
 
 ENV JAVA_HOME /usr/java/jdk1.8.0_60/jre
 
-RUN curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+RUN wget -c "https://bintray.com/sbt/rpm/rpm" -O bintray-sbt-rpm.repo && \
+	mv bintray-sbt-rpm.repo /etc/yum.repos.d/bintray-sbt-rpm.repo
 RUN yum install -y sbt
+
+RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.rpm
+RUN yum localinstall -y jprofiler_linux_9_2.rpm
