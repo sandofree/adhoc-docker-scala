@@ -29,9 +29,6 @@ RUN wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/
 	rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-*.rpm
 RUN yum install -y cron redis mongodb-org cron unzip
 
-# set timezone
-RUN timedatectl set-timezone "Asia/Harbin"
-
 ONBUILD COPY . /data
 
 # set internal sbt repo and crontab
