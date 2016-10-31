@@ -10,7 +10,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> \
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 && \
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 99E82A75642AC823 && \
 	apt-get update -y && \
-	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongo-org redis-server sbt cron unzip wget
+	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server sbt cron unzip wget
 
 # install jprofiler
 RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh
