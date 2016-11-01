@@ -25,7 +25,7 @@ ONBUILD RUN if [ -e /data/script/sbt-repositories ] ; then cp /data/script/sbt-r
 ONBUILD RUN if [ -e /data/script/crontab ] ; then cp /data/script/crontab /etc/crontab && touch /var/log/cron.log ; fi
 
 # build and test
-ONBUILD RUN service mongod restart && service redis restart \ && cd /data \
+ONBUILD RUN service mongod restart && service redis-server restart \ && cd /data \
 	&& sbt -Dsbt.override.build.repos=true test \
 	&& sbt -Dsbt.override.build.repos=true dist \
 	&& unzip -o target/universal/*.zip
