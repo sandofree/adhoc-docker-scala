@@ -2,14 +2,16 @@ FROM debian:8
 
 # install jdk1.8
 
-RUN apt-get update -y && apt-get install -y software-properties-common && \
-	add-apt-repository ppa:webupd8team/java && \
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee /etc/apt/sources.list.d/webupd8team-java.list && \
+	echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list && \
 	echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list &&  \
 	echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.2 main" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list && \
-	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 && \
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 && \
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 99E82A75642AC823 && \
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
 	apt-get update -y && \
+	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+	echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
 	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server sbt cron unzip wget
 
 # install jprofiler
