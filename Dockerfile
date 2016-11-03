@@ -9,7 +9,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 && \
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 99E82A75642AC823 && \
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
-	rm -rf /var/lib/apt/lists/* && \
+	apt-get install -f && apt-get clean && rm -rf /var/lib/apt/lists/* && \
 	apt-get update -y && \
 	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
 	echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
@@ -21,16 +21,17 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 ONBUILD COPY . /data
 
 # set internal sbt repo and crontab
-ONBUILD RUN if [ -e /data/script/sbt-repositories ] ; then cp /data/script/sbt-repositories ~/.sbt/repositories ; fi
+ONBUILD RUN if [ -e /data/script/sbt-repositories ] ; then mkdir ~/.sbt && cp /data/script/sbt-repositories ~/.sbt/repositories ; fi
 ONBUILD RUN if [ -e /data/script/crontab ] ; then cp /data/script/crontab /etc/crontab && touch /var/log/cron.log ; fi
 
 # build and test
 ONBUILD RUN service mongod restart && service redis-server restart \ && cd /data \
-	&& sbt -Dsbt.override.build.repos=true test \
-	&& sbt -Dsbt.override.build.repos=true dist \
-	&& unzip -o target/universal/*.zip
+	&& sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 test \
+	&& sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 dist \
+	&& cd /data/target/universal/ && unzip *.zip
 
 # run cron and project
-ONBUILD CMD cron && cd /data/target/universal/*/bin && \
-	export proj_name=`sbt settings name | tail -1 | cut -d' ' -f2` && \
+ONBUILD CMD cron && \
+	cd /data && export proj_name=`sbt settings name | tail -1 | cut -d' ' -f2 |tr -dc [:print:] | sed 's/\[0m//g'` && \
+	cd /data/target/universal/${proj_name}*/bin && \
 	./$proj_name -Dconfig.resource=prod.conf -Dfile.encoding=UTF8
