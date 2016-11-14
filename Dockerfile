@@ -21,7 +21,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server redis-tools sbt cron unzip wget
 
 # install jprofiler
-# RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh
+RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh -q
 
 RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
