@@ -10,10 +10,15 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 99E82A75642AC823 && \
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
 	apt-get install -f && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+	apt-get update -y && apt-get install -y wget && \
+	echo "deb http://packages.dotdeb.org wheezy all" | tee -a /etc/apt/sources.list.d/dotdeb.list && \
+	echo "deb-src http://packages.dotdeb.org wheezy all" | tee -a /etc/apt/sources.list.d/dotdeb.list && \
+	wget http://www.dotdeb.org/dotdeb.gpg && \
+	apt-key add dotdeb.gpg && \
 	apt-get update -y && \
 	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
 	echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
-	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server sbt cron unzip wget
+	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server redis-tools sbt cron unzip wget
 
 # install jprofiler
 # RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh
