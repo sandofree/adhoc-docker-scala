@@ -25,6 +25,9 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 
 RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
+ONBUILD COPY ./project /data/project
+ONBUILD COPY ./build.sbt /data
+ONBUILD RUN cd /data && sbt update
 ONBUILD COPY . /data
 
 # set internal sbt repo and crontab
