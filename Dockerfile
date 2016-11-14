@@ -26,8 +26,8 @@ RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux
 RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 ONBUILD COPY ./project /data/project
-ONBUILD COPY ./build.sbt /data
-ONBUILD RUN if [ -e /data/script/sbt-repositories ] ; then mkdir ~/.sbt && cp /data/script/sbt-repositories ~/.sbt/repositories ; fi
+ONBUILD COPY ./build.sbt /data/build.sbt
+ONBUILD COPY ./script/sbt-repositories /root/.sbt/repositories
 ONBUILD RUN cd /data && sbt update
 ONBUILD COPY . /data
 
