@@ -28,7 +28,7 @@ RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninterac
 ONBUILD COPY ./project /data/project
 ONBUILD COPY ./build.sbt /data/build.sbt
 ONBUILD COPY ./script/sbt-repositories /root/.sbt/repositories
-ONBUILD RUN cd /data && sbt update
+ONBUILD RUN cd /data && sbt update -Dsbt.override.build.repos=true
 ONBUILD COPY . /data
 
 # set internal sbt repo and crontab
