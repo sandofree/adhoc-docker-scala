@@ -18,7 +18,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 	apt-get update -y && \
 	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
 	echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
-	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server redis-tools sbt cron unzip wget
+	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server redis-tools sbt unzip wget procps
 
 # install jprofiler
 RUN wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh -q
@@ -31,9 +31,6 @@ ONBUILD COPY ./script/sbt-repositories /root/.sbt/repositories
 ONBUILD RUN cd /data && sbt update -Dsbt.override.build.repos=true
 ONBUILD COPY . /data
 
-# set internal sbt repo and crontab
-ONBUILD RUN if [ -e /data/script/crontab ] ; then cp /data/script/crontab /etc/crontab && touch /var/log/cron.log ; fi
-
 # build and test
 ONBUILD RUN service mongod restart && service redis-server restart \ && cd /data \
 	&& sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 test \
@@ -41,7 +38,8 @@ ONBUILD RUN service mongod restart && service redis-server restart \ && cd /data
 	&& cd /data/target/universal/ && unzip *.zip
 
 # run cron and project
-ONBUILD CMD cron && \
-	cd /data && export proj_name=`sbt settings name | tail -1 | cut -d' ' -f2 |tr -dc [:print:] | sed 's/\[0m//g'` && \
+ONBUILD RUN cd /data && export proj_name=`sbt settings name | tail -1 | cut -d' ' -f2 |tr -dc [:print:] | sed 's/\[0m//g'` && \
 	cd /data/target/universal/${proj_name}*/bin && \
-	./$proj_name -Dconfig.resource=prod.conf -Dfile.encoding=UTF8
+	ln -s `pwd`/$proj_name /entrypoint
+
+ONBUILD CMD ["/entrypoint", "-Dconfig.resource=prod.conf", "-Dfile.encoding=UTF8"]
