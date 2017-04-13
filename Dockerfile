@@ -20,7 +20,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 	apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default mongodb-org redis-server redis-tools unzip wget procps
 
 # install sbt
-RUN wget -c 'https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.0.0-M4/sbt-launch.jar'  && \
+RUN wget -c 'http://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.0.0-M4/sbt-launch.jar'  && \
 	mv sbt-launch.jar /var && \
 	echo '#!/bin/bash' > /usr/bin/sbt && \
 	echo 'java -Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M /var/sbt-launch.jar "$@"' >> /usr/bin/sbt && \
