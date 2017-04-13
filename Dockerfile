@@ -39,7 +39,12 @@ ONBUILD RUN service mongod restart && service redis-server restart \ && cd /data
 
 # run cron and project
 ONBUILD RUN cd /data && export proj_name=`sbt settings name | tail -1 | cut -d' ' -f2 |tr -dc [:print:] | sed 's/\[0m//g'` && \
-	cd /data/target/universal/${proj_name}*/bin && \
+	mkdir -p /release/${proj_name} && mv /data/target/universal/${proj_name} /release && \
+	cd /release/${proj_name}*/bin && \
 	ln -s `pwd`/$proj_name /entrypoint
+
+# cleanup
+ONBUILD RUN rm -r /data && apt-get remove --purge -y mongodb-org redis-server redis-tools sbt unzip wget \
+	&& apt-get autoremove -y && apt-get -y clean && rm -rf /var/lib/apt/lists/*
 
 ONBUILD CMD ["/entrypoint", "-Dconfig.resource=prod.conf", "-Dfile.encoding=UTF8"]
