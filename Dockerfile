@@ -45,7 +45,7 @@ ONBUILD RUN service mongod restart && service redis-server restart \ && cd /data
 
 # run cron and project
 ONBUILD RUN cd /data && export proj_name=`sbt settings name | tail -1 | cut -d' ' -f2 |tr -dc [:print:] | sed 's/\[0m//g'` && \
-	mkdir -p /release/${proj_name} && mv /data/target/universal/${proj_name} /release && \
+	mkdir -p /release/${proj_name} && mv /data/target/universal/${proj_name}* /release && \
 	cd /release/${proj_name}*/bin && \
 	ln -s `pwd`/$proj_name /entrypoint
 
