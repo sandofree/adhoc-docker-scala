@@ -23,7 +23,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
 RUN wget -c 'http://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.0.0-M4/sbt-launch.jar'  && \
 	mv sbt-launch.jar /var && \
 	echo '#!/bin/bash' > /usr/bin/sbt && \
-	echo 'java -Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M /var/sbt-launch.jar "$@"' >> /usr/bin/sbt && \
+	echo 'java -Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M -jar /var/sbt-launch.jar "$@"' >> /usr/bin/sbt && \
 	chmod u+x /usr/bin/sbt
 
 # install jprofiler
