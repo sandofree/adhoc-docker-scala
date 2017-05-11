@@ -50,8 +50,6 @@ ONBUILD RUN cd /data && export proj_name=`sbt settings name | tail -1 | cut -d' 
 	ln -s `pwd`/$proj_name /entrypoint
 
 # cleanup
-ONBUILD RUN rm -r /data && apt-get remove --purge -y mongodb-org redis-server redis-tools unzip wget \
-	&& rm /var/sbt-launch.jar /usr/bin/sbt \
-	&& apt-get autoremove -y && apt-get -y clean && rm -rf /var/lib/apt/lists/*
+ONBUILD RUN rm -r /data
 
 ONBUILD CMD ["/entrypoint", "-Dconfig.resource=prod.conf", "-Dfile.encoding=UTF8"]
