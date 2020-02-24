@@ -1,14 +1,14 @@
 FROM debian:8
 
-# Install JDK1.8, MongoDB, Redis
+# Install JDK 1.8
 #TODO: change to use AdoptOpenJDK? not as commercial-ready as Azul zulu.
-RUN echo "Install Java, MongoDB, Redis..." && \
+RUN echo "Install Java..." && \
   (echo "deb http://repos.azulsystems.com/debian stable main" | tee /etc/apt/sources.list.d/zulu.list) && \
 	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xB1998361219BD9C9 && \
 	mkdir -p /var/cache/apt/archives/partial && touch /var/cache/apt/archives/lock && chmod 640 /var/cache/apt/archives/lock && \
 	apt-get install -f && apt-get clean && rm -rf /var/lib/apt/lists/* && \
 	apt-get update -y && \
-	apt-get install -y --force-yes --no-install-recommends zulu-8 mongodb redis-server redis-tools wget ca-certificates unzip procps
+	apt-get install -y --force-yes --no-install-recommends zulu-8 wget ca-certificates unzip
 
 # Install sbt
 RUN echo "Install sbt..." && \
@@ -23,22 +23,16 @@ RUN echo "Install sbt..." && \
   echo 'huaweicloud-ivy: https://mirrors.huaweicloud.com/repository/ivy/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]' >> ~/.sbt/repositories && \
   echo 'huaweicloud-maven: https://mirrors.huaweicloud.com/repository/maven/' >> ~/.sbt/repositories
 
-# Install JProfiler - uncomment this when we need performance profiling.
-#RUN echo "Install JProfiler..." && \
-#	wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh -q
-
 # Config Timezone
 RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
-# Build and Test
+# Build
 ONBUILD COPY ./project /data/project
 ONBUILD COPY ./build.sbt /data/build.sbt
 ONBUILD RUN (if [ -e /data/script/sbt-repositories ] ; then mkdir -p ~/.sbt && cp /data/script/sbt-repositories ~/.sbt/repositories ; fi) && \
 	cd /data && sbt -Dsbt.override.build.repos=true update
 ONBUILD COPY . /data
-ONBUILD RUN echo service mongodb restart && service redis-server restart \ && cd /data && \
-	sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 test && \
-	sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 dist && \
+ONBUILD RUN sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 dist && \
 	cd /data/target/universal/ && unzip -o *.zip
 
 # Install
