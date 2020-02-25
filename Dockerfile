@@ -36,7 +36,8 @@ ONBUILD RUN (if [ -e /data/script/sbt-repositories ] ; then mkdir -p ~/.sbt && c
 ONBUILD COPY . /data
 
 # build and test
-ONBUILD RUN echo service mongodb restart && service redis-server restart \ && cd /data && \
+ONBUILD RUN echo "Build and test..." && \
+	service mongodb restart && service redis-server restart && cd /data && \
 	sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 test && \
 	sbt -Dsbt.override.build.repos=true -Dfile.encoding=UTF-8 dist && \
 	cd /data/target/universal/ && unzip -o *.zip
