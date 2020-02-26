@@ -20,7 +20,7 @@ RUN echo "Install sbt..." && \
 	echo 'local' >> /root/.sbt/repositories && \
 	echo 'huaweicloud-ivy: https://mirrors.huaweicloud.com/repository/ivy/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]' >> /root/.sbt/repositories && \
 	echo 'huaweicloud-maven: https://mirrors.huaweicloud.com/repository/maven/' >> /root/.sbt/repositories && \
-	echo 'sbt-plugin-releases: https://dl.bintray.com/sbt/sbt-plugin-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]' >> /root/.sbt/repositories && \
+	echo 'sbt-plugin-releases-ivy: https://dl.bintray.com/sbt/sbt-plugin-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]' >> /root/.sbt/repositories && \
 	echo 'appadhoc: http://registry-prod.appadhoc.com:30080/repository/release/' >> /root/.sbt/repositories
 
 # Config Timezone
