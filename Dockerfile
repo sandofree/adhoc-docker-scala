@@ -9,6 +9,10 @@ RUN echo "Install Java, MongoDB, Redis..." && \
 	apt-get install -f && apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update -y && \
 	apt-get install -y --force-yes --no-install-recommends zulu-8 mongodb redis-server redis-tools wget ca-certificates unzip procps
 
+# Install JProfiler - uncomment this when we need performance profiling.
+#RUN echo "Install JProfiler..." && \
+#	wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh -q
+
 # Install sbt
 RUN echo "Install sbt..." && \
 	wget -c 'https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.3.8/sbt-launch.jar' && \
@@ -23,10 +27,6 @@ RUN echo "Install sbt..." && \
 	echo 'huaweicloud-maven: https://mirrors.huaweicloud.com/repository/maven/' >> /root/.sbt/repositories && \
 	echo 'sbt-plugin-releases-ivy: https://dl.bintray.com/sbt/sbt-plugin-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]' >> /root/.sbt/repositories && \
 	echo 'appadhoc: http://registry-prod.appadhoc.com:30080/repository/release/' >> /root/.sbt/repositories
-
-# Install JProfiler - uncomment this when we need performance profiling.
-#RUN echo "Install JProfiler..." && \
-#	wget -c http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_9_2.sh && bash jprofiler_linux_9_2.sh -q
 
 # Config Timezone
 RUN echo "Asia/Harbin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
